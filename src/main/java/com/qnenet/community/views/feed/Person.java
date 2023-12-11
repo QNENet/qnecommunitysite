@@ -1,4 +1,4 @@
-package com.qnenet.views.feed;
+package com.qnenet.community.views.feed;
 
 public class Person {
 

@@ -1,4 +1,4 @@
-package com.qnenet.views;
+package com.qnenet.community.views;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.AppLayout;

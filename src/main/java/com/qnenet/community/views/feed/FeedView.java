@@ -1,6 +1,6 @@
-package com.qnenet.views.feed;
+package com.qnenet.community.views.feed;
 
-import com.qnenet.views.MainLayout;
+import com.qnenet.community.views.MainLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
