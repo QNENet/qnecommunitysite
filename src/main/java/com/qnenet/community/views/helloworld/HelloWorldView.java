@@ -1,6 +1,6 @@
 package com.qnenet.community.views.helloworld;
 
-import com.qnenet.community.views.MainLayout;
+import com.qnenet.community.viewsmain.MainLayout;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;

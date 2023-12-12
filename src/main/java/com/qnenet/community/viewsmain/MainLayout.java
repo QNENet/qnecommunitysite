@@ -1,5 +1,6 @@
-package com.qnenet.community.views;
+package com.qnenet.community.viewsmain;
 
+import com.qnenet.community.constants.QRoutes;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -108,7 +109,7 @@ public class MainLayout extends AppLayout {
         homeBtn.getElement().setAttribute("aria-label", "Home");
         homeBtn.addClickListener(click -> {
             closeHelp();
-            UI.getCurrent().navigate("about");
+            UI.getCurrent().navigate(QRoutes.ABOUT);
         });
 
         Button quickBtn = new Button(new Icon(VaadinIcon.BOLT));

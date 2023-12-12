@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Web Editor with Quill Editor and Image Optimization</title>
+
+    <script src="js/quill.min.js"></script>
+
+    <!-- Theme included stylesheets -->
+    <link href="css/quill.snow.css" rel="stylesheet" />
+
+    <link href="css/style.css" rel="stylesheet" />
+
+    <script src="js/image-format.js"></script>
+
+    <script src="js/image-action.js"></script>
+
+    <script src="js/image-compress.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <script
+      defer src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js">
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+    
+    <style> .img-container img {
+        max-width: 100%;
+      }
+    </style>
+
+  </head>
+
+
+  <body>
+    <div id="editor"></div>
+
+    <div class="modal1">
+      <nav class="blue">
+        <div class="nav-wrapper container">
+          <span class="nav-header"> Image Editor </span>
+          <ul class="right image-save">
+            <button
+              class="image-save btn btn-flat green white-text" id="saveImage">
+              Save
+            </button>
+            <button class="btn btn-flat red white-text" onclick="resetImage()">
+              Close
+            </button>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Hidden image that will be used for  holding the source image -->
+      <img id="sourceImage" crossorigin="anonymous" />
+
+      <div class="image-preview">
+        <!-- Canvas that will hold the image to be edited -->
+        <div hidden="" id="selectionRect"></div>
+        <canvas id="canvas"></canvas>
+        <img id="image" alt="Picture" style="display: none" />
+      </div>
+
+      <div id="cropControles" class="image-preview" style="display: none">
+
+        <button
+          class="btn modal-trigger"
+          onclick="cropImage()"
+          style="margin-right: 10px">
+          <i class="material-icons">save</i>
+          Save Crop
+        </button>
+
+        <button class="btn red modal-trigger" onclick="cancelCrop()">
+          <i class="material-icons">delete</i>
+          Cancel
+        </button>
+
+      </div>
+
+      <div class="container app">
+
+        <!-- Text to be shown at the beginning of the application -->
+        <div class="help-text center-align">
+          <h5>Please Upload an Image to Start Editing</h5>
+        </div>
+
+        <!-- All the image controls that will be used for modifying the image -->
+        <div class="image-controls">
+          <div id="startCropBtn">
+            <h6>Image Actions</h6>
+            <div class="row">
+              <div class="col s12">
+                <button class="btn modal-trigger" onclick="startCrop()">
+                  <i class="material-icons">crop</i>
+                  Crop
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <h6>Image Controls</h6>
+          <div class="row">
+            <div class="col s6">
+              <span class="range-field">
+                <label for="brightnessSlider"> Brightness </label>
+                <input
+                  id="brightnessSlider"
+                  type="range"
+                  value="100"
+                  min="0"
+                  max="300"
+                  onchange="applyFilter()"
+                />
+              </span>
+            </div>
+            <div class="col s6">
+              <span class="range-field">
+                <label for="contrastSlider"> Contrast </label>
+                <input
+                  id="contrastSlider"
+                  type="range"
+                  value="100"
+                  min="0"
+                  max="200"
+                  onchange="applyFilter()"
+                />
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s6">
+              <span class="range-field">
+                <label for="grayscaleSlider"> Grayscale </label>
+                <input
+                  id="grayscaleSlider"
+                  type="range"
+                  value="0"
+                  min="0"
+                  max="100"
+                  onchange="applyFilter()"
+                />
+              </span>
+            </div>
+            <div class="col s6">
+              <span class="range-field">
+                <label for="saturationSlider"> Saturation </label>
+                <input
+                  id="saturationSlider"
+                  type="range"
+                  value="100"
+                  min="0"
+                  max="300"
+                  onchange="applyFilter()"
+                />
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s6">
+              <span class="range-field">
+                <label for="sepiaSlider"> Sepia </label>
+                <input
+                  id="sepiaSlider"
+                  type="range"
+                  value="0"
+                  min="0"
+                  max="200"
+                  onchange="applyFilter()"
+                />
+              </span>
+            </div>
+            <div class="col s6">
+              <span class="range-field">
+                <label for="hueRotateSlider"> Hue </label>
+                <input
+                  id="hueRotateSlider"
+                  type="range"
+                  value="0"
+                  min="0"
+                  max="360"
+                  onchange="applyFilter()"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons that will be used to change the values to preset ones -->
+        <div class="preset-filters">
+          <h6>Preset Filters</h6>
+          <button class="btn blue" onclick="brightenFilter()">Brighten</button>
+          <button class="btn blue" onclick="bwFilter()">Black and White</button>
+          <button class="btn blue" onclick="funkyFilter()">Funky</button>
+          <button class="btn blue" onclick="vintageFilter()">Vintage</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Load the script for the editor -->
+    <script src="js/image-editor.js"></script>
+
+    <script>
+      Quill.register("modules/imageActions", ImageActions);
+      Quill.register("modules/imageFormats", ImageFormats);
+      Quill.register("modules/imageCompress", imageCompressor);
+
+      Quill.register("modules/imageButton", (quill) => {
+        class ImageButtonModule extends Quill.Module {
+          static name = "imageButton";
+
+          static defaults = {};
+
+          init(quill) {
+            quill.on("selection", (range) => {
+              if (range.length === 1 && range.isImage()) {
+                const button = document.createElement("button");
+                button.textContent = "Remove Image";
+                button.addEventListener("click", () => {
+                  quill.deleteText(range.start, range.end);
+                });
+                quill.getContainer().appendChild(button);
+              }
+            });
+          }
+        }
+
+        return new ImageButtonModule();
+      });
+
+      const newformats = [
+        "align",
+        "bold",
+        "code-block",
+        "color",
+        "float",
+        "height",
+        "image",
+        "italic",
+        "link",
+        "list",
+        "placeholder",
+        "calltoaction",
+        "size",
+        "underline",
+        "width",
+      ];
+
+      const modules = {
+        imageActions: {},
+        imageFormats: {},
+        imageCompress: {
+          quality: 0.7,
+          maxWidth: 1000,
+          maxHeight: 1000,
+          imageType: "image/jpeg",
+          debug: true,
+        },
+        imageButton: {},
+        history: {
+          delay: 500,
+          maxStack: 100,
+          userOnly: true,
+        },
+        toolbar: [
+          [{ size: ["small", false, "large", "huge"] }],
+          [],
+          ["bold", "italic", "underline", "strike", { color: [] }],
+          ["blockquote", "code-block"],
+          [{ header: 1 }, { header: 2 }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ script: "sub" }, { script: "super" }],
+          [{ align: [] }],
+          [{ color: [] }, { background: [] }],
+          ["clean"],
+          ["link", "image", "code-block"],
+        ],
+      };
+      var editor = new Quill("#editor", {
+        modules: modules,
+        formats: newformats,
+        theme: "snow",
+      });
+    </script>
+
+    
+  </body>
+</html>

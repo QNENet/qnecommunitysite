@@ -2,6 +2,7 @@ package com.qnenet.community.keystore;
 
 import com.qnenet.community.paths.QNEPaths;
 import com.qnenet.qneobjects.QNEObjects;
+import org.apache.commons.io.FileUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,8 @@ public class QKeystore {
 
         qobjs = new QNEObjects();
         this.qnePaths = qnePaths;
-        keystoreFilePath = Paths.get(qnePaths.getSystemPath().toString(), "keystore");
-        keystorePwdFilePath = Paths.get(qnePaths.getSystemPath().toString(), "keystore");
+        keystoreFilePath = Paths.get(qnePaths.getRepositoryPath().toString(), "keystore.p12");
+        keystorePwdFilePath = Paths.get(qnePaths.getRepositoryPath().toString(), "keystore.pwd");
 
         if (Files.notExists(keystoreFilePath)) {
             keyStore = createKeyStore();
@@ -46,12 +47,27 @@ public class QKeystore {
     }
 
     private void saveKeystorePassword() {
-        qobjs.saveObjToFile(keystorePwdFilePath, keystorePwd);
+        try {
+            FileUtils.writeStringToFile(keystorePwdFilePath.toFile(), new String(keystorePwd));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+//    private void saveKeystorePassword() {
+//        qobjs.saveObjToFile(keystorePwdFilePath, keystorePwd);
+//    }
 
     private void loadKeystorePassword() {
-        keystorePwd = (char[]) qobjs.loadObjFromFile(keystorePwdFilePath);
+        try {
+            keystorePwd = (FileUtils.readFileToString(keystorePwdFilePath.toFile())).toCharArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+//    private void loadKeystorePassword() {
+//        keystorePwd = (char[]) qobjs.loadObjFromFile(keystorePwdFilePath);
+//    }
 
     private void saveKeystore() {
         saveKeyStore(keystoreFilePath, keyStore, keystorePwd);

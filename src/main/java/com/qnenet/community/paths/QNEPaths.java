@@ -25,7 +25,7 @@ public class QNEPaths {
         systemPath = Paths.get(qnePath.toString(), "system");
 //        knownPath = Paths.get(systemPath.toString(), "known");
 //        endPointsPath = Paths.get(systemPath.toString(), "endPoints");
-        tmpPath = Paths.get(systemPath.toString(), "tmp");
+        tmpPath = Paths.get(qnePath.toString(), "tmp");
         repositoryPath = Paths.get(qnePath.toString(), "repository");
 //        keystoreFilePath = Paths.get(repositoryPath.toString(), "keystore.p12");
 //        installPath = Paths.get(qnePath.toString(), "install");
